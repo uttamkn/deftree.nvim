@@ -1,8 +1,9 @@
 local M = {}
 
-M.greet = function()
-	print("hello")
+function M.setup(opts)
+	opts = opts or {}
+	print(require("deftree.keymaps").setup_keymaps())
+	vim.api.nvim_create_user_command("DeftreeToggle", require("deftree.ui").toggle_window, {})
 end
-M.greet()
 
 return M
