@@ -5,15 +5,19 @@ local state = {
 	bufnr = nil,
 	win_id = nil,
 }
+---@param win integer|nil
 function state.set_win(win)
 	state.win_id = win
 end
+---@param buf integer|nil
 function state.set_buf(buf)
 	state.bufnr = buf
 end
+---@return boolean|nil
 function state.has_win()
 	return state.win_id and vim.api.nvim_win_is_valid(state.win_id)
 end
+---@return boolean|nil
 function state.has_buf()
 	return state.bufnr and vim.api.nvim_buf_is_valid(state.bufnr)
 end
