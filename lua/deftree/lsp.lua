@@ -13,28 +13,22 @@ local function _get_doc_symbols(bufnr)
 		return nil
 	end
 
-	if result[1].error then
-		vim.notify("LSP Error: " .. result[1].error.message, vim.log.levels.ERROR)
-		return nil
-	end
-
 	return result
 end
 
----@param chunk DocumentSymbolOutput
-local function _recursive_doc_sym_helper(chunk)
-	local newChunk = {
-		kind = vim.lsp.protocol.SymbolKind[chunk.kind],
-		name = chunk.name,
-		range = chunk.range,
-		showChildren = false,
-		children = {},
-	}
-	for _, child in ipairs(chunk.children) do
-		local children = _recursive_doc_sym_helper(child)
-		table.insert(newChunk.children, children)
+---@param chunks DocumentSymbolOutput[]
+local function _recursive_doc_sym_helper(chunks)
+	local newChunks = {}
+	for _, chunk in ipairs(chunks) do
+		local newChunk = {
+			kind = vim.lsp.protocol.SymbolKind[chunk.kind],
+			name = chunk.name,
+			range = chunk.range,
+			children = _recursive_doc_sym_helper(chunk.children),
+		}
+		table.insert(newChunks, newChunk)
 	end
-	return newChunk
+	return newChunks
 end
 
 ---@param bufnr integer
@@ -47,12 +41,15 @@ function M.get_toc(bufnr)
 
 	---@type DocumentSymbolOutput[]
 	local result = {}
-
-	for _, res in pairs(symbols) do
-		for _, chunk in ipairs(res.result) do
-			table.insert(result, _recursive_doc_sym_helper(chunk))
+	for _, clientOutput in pairs(symbols) do
+		if clientOutput.error then
+			vim.notify("LSP Error: " .. clientOutput.error.message, vim.log.levels.WARN)
+		else
+			result = _recursive_doc_sym_helper(clientOutput.result)
+			break
 		end
 	end
+
 	return result
 end
 

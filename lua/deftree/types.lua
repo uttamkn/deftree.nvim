@@ -10,5 +10,4 @@
 ---@field kind string
 ---@field name string
 ---@field range Range
----@field showChildren boolean
 ---@field children DocumentSymbolOutput[]
