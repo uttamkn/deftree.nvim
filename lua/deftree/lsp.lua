@@ -20,13 +20,12 @@ end
 local function _recursive_doc_sym_helper(chunks)
 	local newChunks = {}
 	for _, chunk in ipairs(chunks) do
-		local newChunk = {
+		table.insert(newChunks, {
 			kind = vim.lsp.protocol.SymbolKind[chunk.kind],
 			name = chunk.name,
 			range = chunk.range,
 			children = _recursive_doc_sym_helper(chunk.children),
-		}
-		table.insert(newChunks, newChunk)
+		})
 	end
 	return newChunks
 end

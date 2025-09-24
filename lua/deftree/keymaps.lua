@@ -12,7 +12,6 @@ function M.setup_keymaps()
 		"",
 		{ noremap = true, silent = true, callback = ui.close_window }
 	)
-	return true
 end
 
 return M
