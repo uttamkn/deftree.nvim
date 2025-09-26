@@ -22,18 +22,6 @@ function state.has_buf()
 	return state.bufnr and vim.api.nvim_buf_is_valid(state.bufnr)
 end
 
--- This function exposes buffer to other modules (for now, keymaps)
----@return integer
-function M.get_or_create_buf()
-	if state.has_buf() then
-		return state.bufnr
-	end
-
-	state.set_buf(vim.api.nvim_create_buf(false, true))
-	vim.api.nvim_set_option_value("bufhidden", "hide", { buf = state.bufnr })
-	return state.bufnr
-end
-
 -- Window
 local window = {
 	---@type vim.api.keyset.win_config
@@ -48,6 +36,18 @@ local window = {
 	},
 	enter = true,
 }
+
+-- This function exposes buffer to other modules
+---@return integer
+function M.get_or_create_buf()
+	if state.has_buf() then
+		return state.bufnr
+	end
+
+	state.set_buf(vim.api.nvim_create_buf(false, true))
+	vim.api.nvim_set_option_value("bufhidden", "hide", { buf = state.bufnr })
+	return state.bufnr
+end
 
 function M.open_window()
 	if state.has_win() then
