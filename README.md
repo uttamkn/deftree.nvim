@@ -1,3 +1,3 @@
 # deftree.nvim
 
-A Neovim plugin to track and explore your ‘go to definitions’ in a tree view.
+A Neovim plugin to visualize class inheritance and function calls in a tree view.
