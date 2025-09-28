@@ -11,8 +11,3 @@
 ---@field name string
 ---@field range Range
 ---@field children DocumentSymbolOutput[]
-
----@class DocumentSymbolOutputTreeState
----@field node DocumentSymbolOutput
----@field showChildren boolean
----@field level integer

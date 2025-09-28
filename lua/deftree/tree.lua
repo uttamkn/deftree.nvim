@@ -1,45 +1,21 @@
 local M = {}
 
--- the tree is flattened here
----@type DocumentSymbolOutputTreeState[]
-local tree_state = {}
-
----@param nodes DocumentSymbolOutput[]
----@param level integer
-local function _recursive_tree_state_builder(nodes, level)
-	for _, node in ipairs(nodes) do
-		table.insert(tree_state, {
-			node = node,
-			showChildren = false,
-			level = level,
-		})
-		if node.children and #node.children > 0 then
-			_recursive_tree_state_builder(node.children, level + 1)
+---@param symbols DocumentSymbolOutput[]
+function M.generate_toc_tree(symbols)
+	local lines = {}
+	local function _traverse(symbs, depth)
+		for _, sym in ipairs(symbs) do
+			local indent = string.rep("  ", depth)
+			local line = string.format("%s- [%s] %s (L%d)", indent, sym.kind, sym.name, sym.range.start.line + 1)
+			table.insert(lines, line)
+			-- TODO: This should display only if the user expands the node
+			if sym.children and #sym.children > 0 then
+				_traverse(sym.children, depth + 1)
+			end
 		end
 	end
-end
-
----@param symbols DocumentSymbolOutput[]
-local function _refresh_tree_state(symbols)
-	tree_state = {}
-	_recursive_tree_state_builder(symbols, 0)
-end
-
----@return DocumentSymbolOutputTreeState[]
-function M.get_tree_state()
-	return tree_state
-end
-
----@param symbols DocumentSymbolOutputTreeState[]
-function M.generate_toc_tree(symbols)
-	_refresh_tree_state(symbols)
-	-- TODO: flatten and return only visible nodes
-	return tree_state
-end
-
----@param node DocumentSymbolOutputTreeState
-function M.toggle_node(node)
-	node.showChildren = not node.showChildren
+	_traverse(symbols, 0)
+	return lines
 end
 
 return M
