@@ -1,9 +1,12 @@
 -- Sets deftree specific keybinds
 local M = {}
 
-function M.setup_keymaps()
+---@param buf integer
+function M.setup_keymaps(buf)
+	if not buf or not vim.api.nvim_buf_is_valid(buf) then
+		return
+	end
 	local ui = require("deftree.ui")
-	local buf = ui.get_or_create_buf()
 
 	-- quit deftree
 	vim.api.nvim_buf_set_keymap(buf, "n", "q", "", { noremap = true, silent = true, callback = ui.close_window })

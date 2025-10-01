@@ -20,6 +20,6 @@
 
 ---@class TreeItem
 ---@field text string
----@field data DocumentSymbolOutput
+---@field data DocumentSymbolOutput -- will be changed to any or multiple types in future
 ---@field depth integer
 ---@field hl hlGroup[]

@@ -1,6 +1,7 @@
 local M = {}
 
 ---@param symbols DocumentSymbolOutput[]
+---@return TreeItem[]
 function M.generate_toc_tree(symbols)
 	---@type TreeItem[]
 	local lines = {}
@@ -19,7 +20,7 @@ function M.generate_toc_tree(symbols)
 				data = sym,
 				hl = {
 					{ start = #indent + 3, ["end"] = #indent + 3 + #sym.kind, group = "Type" }, -- to highlight the kind and text differently in ui
-					{ start = #indent + 6 + #sym.kind, ["end"] = #line, group = "Name" },
+					{ start = #indent + 5 + #sym.kind, ["end"] = #line, group = "Identifier" },
 				},
 			}
 			table.insert(lines, item)
