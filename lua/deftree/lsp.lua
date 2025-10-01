@@ -1,5 +1,6 @@
 local M = {}
 
+-- Helper functions
 ---@param bufnr integer
 ---@return table<integer, { error: (lsp.ResponseError)?, result: any }>?
 local function _get_doc_symbols(bufnr)
