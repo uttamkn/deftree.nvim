@@ -1,6 +1,6 @@
 local M = {}
 
--- Helper functions
+-- LSP calls
 ---@param bufnr integer
 ---@return table<integer, { error: (lsp.ResponseError)?, result: any }>?
 local function _get_doc_symbols(bufnr)
@@ -23,6 +23,7 @@ local function _get_doc_symbols(bufnr)
 	return result
 end
 
+-- Helper functions
 ---@param chunks DocumentSymbolOutput[]
 local function _recursive_doc_sym_helper(chunks)
 	local newChunks = {}
