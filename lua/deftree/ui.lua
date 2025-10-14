@@ -7,6 +7,7 @@ local state = {
 	bufnr = nil, -- deftree buffer
 	win_id = nil, -- deftree window
 	src_bufnr = nil, -- the main buffer which is being scanned
+	src_win_id = nil, -- the main window which is being scanned
 	symbols = nil, -- DOM tree
 	items = {}, -- lines that is being rendered along with some metadata [!!IMPORTANT!!]: THIS SHOULD MAINTAIN LINE NUMBERS
 }
@@ -196,6 +197,7 @@ function M.open_window()
 		return
 	end
 	state.src_bufnr = vim.api.nvim_get_current_buf()
+	state.src_win_id = vim.api.nvim_get_current_win()
 	state.symbols = lsp.get_toc(state.src_bufnr) -- caching this so the i dont call lsp every time i render but i have to call it when i open the window to keep it updated
 
 	local buf = M.get_or_create_buf()
@@ -227,12 +229,14 @@ function M.toggle_window(_)
 end
 
 -- Tree interactions
-function M.toggle_node(line_number)
-	local line = state.items and state.items[line_number]
-	if not line or not line.data then
+---@param line_number integer
+---@param expand boolean
+function M.toggle_node(line_number, expand)
+	local item = state.items and state.items[line_number]
+	if not item or not item.data then
 		return
 	end
-	line.data.expanded = not line.data.expanded
+	item.data.expanded = expand
 	M.render()
 end
 
@@ -244,4 +248,18 @@ function M.refresh()
 	M.render()
 end
 
+---@param line_number integer
+function M.redirect(line_number)
+	local item = state.items and state.items[line_number]
+	if not item or not item.data then
+		return
+	end
+	local range = item.data.range
+	if not range or not range.start then
+		return
+	end
+	M.close_window()
+	vim.api.nvim_set_current_win(state.src_win_id)
+	vim.api.nvim_win_set_cursor(state.src_win_id, { range.start.line + 1, range.start.character })
+end
 return M
