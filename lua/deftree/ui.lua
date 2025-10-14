@@ -143,11 +143,11 @@ function M.render()
 	local lines = _add_title("Table of Contents") -- add title
 	lines = vim.list_extend(lines, M.render_toc()) -- add toc
 	lines = vim.list_extend(lines, _add_separator()) -- add separator
-	lines = vim.list_extend(lines, _add_title("Class Heirarchy")) -- add class heirarchy title
-	lines = vim.list_extend(lines, M.render_class_heirarchy()) -- add class heirarchy
+	lines = vim.list_extend(lines, _add_title("Class Hierarchy")) -- add class hierarchy title
+	lines = vim.list_extend(lines, M.render_class_hierarchy()) -- add class hierarchy
 	lines = vim.list_extend(lines, _add_separator()) -- add separator
-	lines = vim.list_extend(lines, _add_title("Function Heirarchy")) -- add function heirarchy title
-	lines = vim.list_extend(lines, M.render_function_heirarchy()) -- add function heirarchy
+	lines = vim.list_extend(lines, _add_title("Function Hierarchy")) -- add function hierarchy title
+	lines = vim.list_extend(lines, M.render_function_hierarchy()) -- add function hierarchy
 	_set_buf_lines(state.bufnr, lines)
 end
 
@@ -169,7 +169,7 @@ function M.render_toc()
 end
 
 ---@return string[]
-function M.render_class_heirarchy()
+function M.render_class_hierarchy()
 	if not state.has_buf() or not state.src_bufnr then
 		vim.notify("Deftree: No buffer or source buffer found", vim.log.levels.WARN)
 		return {}
@@ -180,7 +180,7 @@ function M.render_class_heirarchy()
 end
 
 ---@return string[]
-function M.render_function_heirarchy()
+function M.render_function_hierarchy()
 	if not state.has_buf() or not state.src_bufnr then
 		vim.notify("Deftree: No buffer or source buffer found", vim.log.levels.WARN)
 		return {}
